@@ -1,0 +1,68 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+public class FiksturOlusturucu {
+
+    public static void main(String[] args) {
+        List<String> takimlar = new ArrayList<>();
+        takimlar.add("Galatasaray");
+        takimlar.add("Bursaspor");
+        takimlar.add("Fenerbahçe");
+        takimlar.add("Beşiktaş");
+        takimlar.add("Başakşehir");
+        takimlar.add("Trabzonspor");
+
+        FiksturOlusturucu fiksturOlusturucu = new FiksturOlusturucu();
+        List<List<String>> fikstur = fiksturOlusturucu.fiksturOlustur(takimlar);
+
+        fiksturOlusturucu.fiksturYazdir(fikstur);
+    }
+
+    public List<List<String>> fiksturOlustur(List<String> takimlar) {
+        List<List<String>> fikstur = new ArrayList<>();
+        int takimSayisi = takimlar.size();
+        boolean tekTakimVarMi = takimSayisi % 2 == 1;
+
+        if (tekTakimVarMi) {
+            takimlar.add("Bay");
+            takimSayisi++;
+        }
+
+        for (int hafta = 1; hafta < takimSayisi; hafta++) {
+            List<String> haftaninFiksturu = new ArrayList<>();
+
+            for (int i = 0; i < takimSayisi / 2; i++) {
+                String evSahibi = takimlar.get(i);
+                String deplasman = takimlar.get(takimSayisi - 1 - i);
+
+                if (!evSahibi.equals("Bay") && !deplasman.equals("Bay")) {
+                    String mac = evSahibi + " vs " + deplasman;
+                    haftaninFiksturu.add(mac);
+                }
+            }
+
+            Collections.shuffle(haftaninFiksturu, new Random()); // Maçları karıştır
+
+            fikstur.add(haftaninFiksturu);
+
+            // Takımları döndür
+            Collections.rotate(takimlar.subList(1, takimSayisi), 1);
+        }
+
+        return fikstur;
+    }
+
+    public void fiksturYazdir(List<List<String>> fikstur) {
+        int round = 1;
+        for (List<String> hafta : fikstur) {
+            System.out.println("Round " + round);
+            for (String mac : hafta) {
+                System.out.println(mac);
+            }
+            System.out.println();
+            round++;
+        }
+    }
+}
